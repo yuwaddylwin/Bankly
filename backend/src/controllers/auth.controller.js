@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import { generateToken } from "../lib/utils.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 // SIGNUP 
 export const signup = async (req, res) => {
@@ -17,6 +18,12 @@ export const signup = async (req, res) => {
         message: "Password must be at least 6 characters",
       });
     }
+
+    if (!/^\d{10}$/.test(phone)) {
+      return res.status(400).json({
+        message: "Phone number must be exactly 10 digits",
+      });
+}
 
     // ✅ Check existing user (email or phone)
     const userExists = await User.findOne({
@@ -63,29 +70,45 @@ export const signup = async (req, res) => {
 
 // LOGIN
 export const login = async (req, res) => {
-  const { email, password } = req.body;
-
   try {
+    console.log("LOGIN BODY:", req.body);
+
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
     const user = await User.findOne({ email });
+
     if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (!user.password) {
+      return res.status(500).json({ message: "User has no password stored" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    if (!isPasswordCorrect) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-
-    generateToken(user._id, res);
-
-    res.status(200).json({
-      _id: user._id,
-      fullName: user.fullName,
-      email: user.email,
+    const token = jwt.sign({ id: user._id }, "secret", {
+      expiresIn: "7d",
     });
-  } catch (error) {
-    console.log("Error in login controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+    });
+
+    res.json({ user });
+
+  } catch (err) {
+    console.error("LOGIN ERROR:", err); // 🔥 THIS IS KEY
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -100,5 +123,17 @@ export const logout = (req, res) => {
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.log("Error in logout controller", error.message);
+  }
+};
+
+
+
+// GET ME
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
   }
 };
