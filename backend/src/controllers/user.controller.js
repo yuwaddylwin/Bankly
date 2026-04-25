@@ -4,6 +4,8 @@ export const getUserByAccount = async (req, res) => {
   try {
     const { accountNumber } = req.params;
 
+    console.log("ACCOUNT RECEIVED:", accountNumber);
+
     if (!/^AC\d{10}$/.test(accountNumber)) {
       return res.status(400).json({ message: "Invalid account format" });
     }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
@@ -25,9 +26,12 @@ export default function SignUpPage() {
     if (!formData.email.trim())
       return toast.error("Email required");
 
-    // ✅ EXACT 10 DIGITS ONLY
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    if (!emailRegex.test(formData.email))
+      return toast.error("Enter a valid email");
+
     if (!/^\d{10}$/.test(formData.phone))
-      return toast.error("Phone number must be exactly 10 digits");
+      return toast.error("Phone must be 10 digits");
 
     if (formData.password.length < 6)
       return toast.error("Password must be at least 6 characters");
@@ -43,31 +47,32 @@ export default function SignUpPage() {
     const res = await signup(formData);
 
     if (res) {
-      toast.success("Signup successful! We will get back to you soon. Thank you");
-
-      // ✅ CLEAR FORM AFTER SUCCESS
+      toast.success("Signup successful 🎉");
       setFormData(initialState);
-
-      // optional: reset password visibility
       setShowPassword(false);
-
-      // optional: redirect
-      // navigate("/");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200">
-      <div className="card w-full max-w-md shadow-2xl bg-base-100">
-        <form className="card-body" onSubmit={handleSubmit}>
-          <h1 className="text-3xl font-bold text-center">
-            Create Account
-          </h1>
+    <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
 
+      <div className="w-full max-w-md">
+
+        {/* 🔥 SMALL TOP GRADIENT CARD */}
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl p-5 shadow-lg mb-[-40px] relative z-10">
+          <h1 className="text-xl font-bold">Register Account</h1>
+          <p className="text-sm opacity-80">Join your digital bank, Bankly!</p>
+        </div>
+
+        {/* FORM CARD */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-base-100 rounded-2xl p-5 pt-14 shadow-xl space-y-4"
+        >
           <input
             type="text"
             placeholder="Full Name"
-            className="input input-bordered"
+            className="input input-bordered w-full"
             value={formData.fullName}
             onChange={(e) =>
               setFormData({ ...formData, fullName: e.target.value })
@@ -77,24 +82,23 @@ export default function SignUpPage() {
           <input
             type="email"
             placeholder="Email"
-            className="input input-bordered"
+            className="input input-bordered w-full"
             value={formData.email}
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
           />
 
-          {/* ✅ PHONE (10 DIGITS) */}
           <input
             type="tel"
             placeholder="Phone No."
-            maxLength={10} // prevents typing more
-            className="input input-bordered"
+            maxLength={10}
+            className="input input-bordered w-full"
             value={formData.phone}
             onChange={(e) =>
               setFormData({
                 ...formData,
-                phone: e.target.value.replace(/\D/g, ""), // only numbers
+                phone: e.target.value.replace(/\D/g, ""),
               })
             }
           />
@@ -109,25 +113,26 @@ export default function SignUpPage() {
                 setFormData({ ...formData, password: e.target.value })
               }
             />
-            <span
-              className="absolute right-3 top-3 cursor-pointer text-sm"
+            <button
+              type="button"
+              className="absolute right-3 top-3"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? "Hide" : "Show"}
-            </span>
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
           </div>
 
           <button
-            className="btn btn-primary mt-4"
+            className="btn w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-none"
             disabled={isSigningUp}
           >
             {isSigningUp ? "Signing..." : "Sign Up"}
           </button>
 
-          <p className="text-center text-sm mt-2">
+          <p className="text-center text-sm">
             Already have an account?
             <span
-              className="link link-primary ml-1"
+              className="text-indigo-500 ml-1 cursor-pointer"
               onClick={() => navigate("/login")}
             >
               Login

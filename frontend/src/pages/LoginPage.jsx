@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -25,32 +26,43 @@ export default function LoginPage() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (validateForm() !== true) return;
+    if (validateForm() !== true) return;
 
-  const res = await login(formData);
+    const res = await login(formData);
 
-  if (res) {
-    const userData = res.user || res; // handles both cases
+    if (res) {
+      const userData = res.user || res;
 
-    localStorage.setItem("userId", userData._id);
-    localStorage.setItem("user", JSON.stringify(userData));
-    toast.success("Welcome back 👋");
-    navigate("/"); 
-  }
-};
+      localStorage.setItem("userId", userData._id);
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      toast.success("Welcome back 👋");
+      navigate("/");
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200">
-      <div className="card w-full max-w-md shadow-2xl bg-base-100">
-        <form className="card-body" onSubmit={handleSubmit}>
-          <h1 className="text-3xl font-bold text-center">Login</h1>
+    <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
 
+      <div className="w-full max-w-md">
+
+        {/* 🔥 TOP GRADIENT CARD */}
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl p-5 shadow-lg mb-[-40px] relative z-10">
+          <h1 className="text-xl font-bold">Welcome Back</h1>
+          <p className="text-sm opacity-80">Login to continue</p>
+        </div>
+
+        {/* FORM */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-base-100 rounded-2xl p-5 pt-14 shadow-xl space-y-4"
+        >
           <input
             type="email"
             placeholder="Email"
-            className="input input-bordered"
+            className="input input-bordered w-full"
             value={formData.email}
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
@@ -67,25 +79,26 @@ export default function LoginPage() {
                 setFormData({ ...formData, password: e.target.value })
               }
             />
-            <span
-              className="absolute right-3 top-3 cursor-pointer text-sm"
+            <button
+              type="button"
+              className="absolute right-3 top-3"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? "Hide" : "Show"}
-            </span>
+              {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+            </button>
           </div>
 
           <button
-            className="btn btn-primary mt-4"
+            className="btn w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-none"
             disabled={isLoggingIn}
           >
             {isLoggingIn ? "Logging in..." : "Login"}
           </button>
 
-          <p className="text-center text-sm mt-2">
+          <p className="text-center text-sm">
             Don’t have an account?
             <span
-              className="link link-primary ml-1"
+              className="text-indigo-500 ml-1 cursor-pointer"
               onClick={() => navigate("/signup")}
             >
               Register

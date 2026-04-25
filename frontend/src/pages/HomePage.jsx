@@ -33,7 +33,7 @@ export default function HomePage() {
         
         {/* CARD */}
         <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl p-5 shadow-lg">
-          <p className="text-sm opacity-80">Welcome</p>
+          <p className="text-sm opacity-80">Welcome!</p>
           <h2 className="text-xl font-bold">{user?.fullName || "..."}</h2>
 
           {/* BALANCE WITH TOGGLE */}
