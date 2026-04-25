@@ -27,21 +27,24 @@ export const useAuthStore = create((set) => ({
 
   // ✅ LOGIN FUNCTION
   login: async (data) => {
-    try {
-      set({ isLoggingIn: true });
+  try {
+    set({ isLoggingIn: true });
 
-      const res = await axios.post(`${API}/login`, data, {
-        withCredentials: true,
-      });
+    const res = await axios.post(`${API}/login`, data, {
+      withCredentials: true,
+    });
 
-      set({ isLoggingIn: false });
-      return res.data;
-    } catch (err) {
-      set({ isLoggingIn: false });
-      toast.error(err.response?.data?.message || "Login failed");
-      return false;
-    }
-  },
+    // ✅ STORE USER HERE
+    set({ user: res.data.user });
+
+    set({ isLoggingIn: false });
+    return res.data;
+  } catch (err) {
+    set({ isLoggingIn: false });
+    toast.error(err.response?.data?.message || "Login failed");
+    return false;
+  }
+},
 
   getMe: async () => {
     try {

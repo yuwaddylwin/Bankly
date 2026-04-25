@@ -43,6 +43,12 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    notifications: [
+  {
+    message: String,
+    createdAt: { type: Date, default: Date.now }
+  }
+]
   },
   { timestamps: true }
 );

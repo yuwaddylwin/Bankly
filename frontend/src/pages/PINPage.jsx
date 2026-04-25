@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
@@ -8,25 +8,27 @@ export default function PINPage() {
 
   const handleNumberClick = (num) => {
     if (pin.length < 6) {
-      setPin(pin + num);
+      setPin((prev) => prev + num);
     }
   };
 
   const handleDelete = () => {
-    setPin(pin.slice(0, -1));
+    setPin((prev) => prev.slice(0, -1));
   };
 
-  const handleSubmit = () => {
-    if (pin.length !== 6) {
-      alert("Enter 6-digit PIN");
-      return;
-    }
+  // 🔥 AUTO CHECK PIN
+  useEffect(() => {
+  if (pin.length !== 6) return;
 
-    console.log("PIN:", pin);
-
-    // 👉 after success, go to transfer page
-    navigate("/transfer");
-  };
+  if (pin === "111222") {
+    setTimeout(() => {
+      navigate("/transfer");
+    }, 200);
+  } else {
+    alert("Incorrect PIN");
+    setPin("");
+  }
+}, [pin, navigate]);
 
   return (
     <div className="min-h-screen bg-base-200 flex flex-col items-center justify-between py-10 relative">
@@ -42,7 +44,6 @@ export default function PINPage() {
       {/* TOP */}
       <div className="flex flex-col items-center">
         
-        {/* Avatar */}
         <div className="w-20 h-20 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold">
           Bankly
         </div>
@@ -57,7 +58,7 @@ export default function PINPage() {
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className={`w-3 h-3 rounded-full transition ${
+              className={`w-3 h-3 rounded-full ${
                 i < pin.length ? "bg-indigo-600" : "bg-gray-300"
               }`}
             />
@@ -67,7 +68,6 @@ export default function PINPage() {
 
       {/* KEYPAD */}
       <div className="grid grid-cols-3 gap-6 mb-10">
-        
         {[1,2,3,4,5,6,7,8,9].map((num) => (
           <button
             key={num}
@@ -78,10 +78,8 @@ export default function PINPage() {
           </button>
         ))}
 
-        {/* empty space */}
         <div></div>
 
-        {/* 0 */}
         <button
           onClick={() => handleNumberClick("0")}
           className="w-16 h-16 rounded-full bg-white shadow-md text-lg font-semibold flex items-center justify-center active:scale-95 transition"
@@ -89,7 +87,6 @@ export default function PINPage() {
           0
         </button>
 
-        {/* delete */}
         <button
           onClick={handleDelete}
           className="w-16 h-16 rounded-full bg-white shadow-md text-lg flex items-center justify-center active:scale-95 transition"
@@ -97,16 +94,6 @@ export default function PINPage() {
           ⌫
         </button>
       </div>
-
-      {/* CONFIRM */}
-      {pin.length === 6 && (
-        <button
-          onClick={handleSubmit}
-          className="absolute bottom-6 bg-indigo-600 text-white px-6 py-2 rounded-full shadow-lg"
-        >
-          Confirm
-        </button>
-      )}
     </div>
   );
 }

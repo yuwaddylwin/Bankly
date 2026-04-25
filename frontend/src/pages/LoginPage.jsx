@@ -25,17 +25,21 @@ export default function LoginPage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (validateForm() !== true) return;
+  if (validateForm() !== true) return;
 
-    const res = await login(formData);
+  const res = await login(formData);
 
-    if (res) {
-      toast.success("Welcome back 👋");
-      navigate("/"); // ✅ go to home page
-    }
-  };
+  if (res) {
+    const userData = res.user || res; // handles both cases
+
+    localStorage.setItem("userId", userData._id);
+    localStorage.setItem("user", JSON.stringify(userData));
+    toast.success("Welcome back 👋");
+    navigate("/"); 
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200">
