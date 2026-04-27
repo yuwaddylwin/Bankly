@@ -7,6 +7,7 @@ import cors from "cors";
 import userRoutes from "./routes/user.route.js";
 import transactionRoutes from "./routes/transaction.route.js";
 import transferRoutes from "./routes/transfer.route.js";
+import notificationRoutes from "./routes/notification.route.js";
 
 const app = express();
 
@@ -21,12 +22,17 @@ app.use(
     credentials: true,
   })
 );
-
+app.use((req, res, next) => {
+  console.log(`➡️ ${req.method} ${req.url}`);
+  next();
+});
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/transfer", transferRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/notifications", notificationRoutes);
+
 
 
 app.listen(PORT, () => {

@@ -2,8 +2,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
 
 export default function ConfirmPage() {
+  const { refreshUser } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -11,6 +13,7 @@ export default function ConfirmPage() {
   const state = location.state || {};
 
   if (!state || !state.sender || !state.receiver || !state.amount) {
+    console.log("STATE DEBUG:", state);
     return (
       <div className="min-h-screen flex items-center justify-center bg-base-200">
         <div className="text-center">
@@ -36,35 +39,35 @@ export default function ConfirmPage() {
   };
 
   const handleConfirm = async () => {
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const res = await axios.post(
-        "/api/transfer",
-        {
-          receiverAcc: receiver.accountNumber,
-          amount,
-        },
-        { withCredentials: true }
-      );
+    const res = await axios.post(
+      "http://localhost:5001/api/transfer",
+      {
+        receiverAcc: receiver.accountNumber,
+        amount,
+      },
+      { withCredentials: true }
+    );
 
-      const data = res.data;
+    // 🔥 refresh balance instantly
+    await refreshUser();
 
-      navigate("/success", {
-        state: {
-          sender,
-          receiver,
-          amount,
-          transactionId: data.transactionId,
-        },
-      });
-    } catch (err) {
-      alert(err.response?.data?.message || "Transfer failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+    navigate("/success", {
+      state: {
+        sender,
+        receiver,
+        amount,
+        transactionId: res.data.transactionId,
+      },
+    });
+  } catch (err) {
+    alert(err.response?.data?.message || "Transfer failed");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="min-h-screen bg-base-200">
 
@@ -121,13 +124,6 @@ export default function ConfirmPage() {
           <div className="flex justify-between text-sm">
             <span className="opacity-60">Account</span>
             <span>{maskAccount(receiver.accountNumber)}</span>
-          </div>
-
-          <div className="flex justify-between text-sm">
-            <span className="opacity-60">Transaction ID</span>
-            <span className="text-xs">
-              {state.transactionId || "Processing..."}
-            </span>
           </div>
         </div>
 

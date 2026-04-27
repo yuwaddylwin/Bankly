@@ -1,78 +1,97 @@
+// controllers/transferController.js
+import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import Transaction from "../models/transaction.model.js";
-import mongoose from "mongoose";
+import Notification from "../models/notification.model.js";
+
+const generateTransactionId = () => {
+  return "TXN" + Date.now() + Math.floor(Math.random() * 1000);
+};
 
 export const transferMoney = async (req, res) => {
-  const { receiverAcc, amount } = req.body;
-  const senderId = req.user.id; // ✅ from token
-
-  if (!receiverAcc) {
-  throw new Error("Receiver account required");
-}
-
-  if (!amount || amount <= 0) {
-    return res.status(400).json({ message: "Invalid amount" });
-  }
+  console.log("📥 BODY:", req.body);
+  console.log("👤 USER:", req.user);
 
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    const sender = await User.findById(senderId).session(session);
-    const receiver = await User.findOne({
-      accountNumber: receiverAcc,
-    }).session(session);
+    // 🔥 SAFE extraction
+    const senderId = req.user?._id;
+    const { receiverAcc, amount } = req.body;
 
+    console.log("🔎 senderId:", senderId);
+    console.log("🔎 receiverAcc:", receiverAcc);
+    console.log("🔎 amount:", amount);
+
+    // ✅ validate input
+    if (!senderId) throw new Error("Unauthorized");
+    if (!receiverAcc || !amount) {
+      throw new Error("Invalid data");
+    }
+
+    const sender = await User.findById(senderId).session(session);
+    const receiver = await User.findOne({ accountNumber: receiverAcc }).session(session);
+
+    console.log("👤 Sender:", sender);
+    console.log("👤 Receiver:", receiver);
+
+    // 🔥 CRITICAL FIXES
     if (!sender) throw new Error("Sender not found");
     if (!receiver) throw new Error("Receiver not found");
 
-    if (sender.accountNumber === receiver.accountNumber) {
-      throw new Error("Cannot transfer to yourself");
+    if (sender.accountNumber === receiverAcc) {
+      throw new Error("Cannot send to yourself");
     }
 
     if (sender.balance < amount) {
       throw new Error("Insufficient balance");
     }
 
+    // 💰 Update balances
     sender.balance -= amount;
     receiver.balance += amount;
 
     await sender.save({ session });
-    receiver.notifications.push({
-    message: `You received ${amount} THB from ${sender.fullName}`,
-    });
-
     await receiver.save({ session });
 
-    const transactionId = "TXN" + Date.now();
+    // 🧾 Transaction
+    const transactionId = "TXN" + Date.now() + Math.floor(Math.random() * 1000);
 
-    await Transaction.create(
-      [
-        {
-          transactionId,
-          sender: sender._id,
-          receiver: receiver._id,
-          amount,
-        },
-      ],
-      { session }
-    );
+    await Transaction.create([{
+      transactionId,
+      sender: sender._id,
+      receiver: receiver._id,
+      amount,
+    }], { session });
+
+    // 🔔 Notification
+    await Notification.create([{
+    user: receiver._id,
+    message: `You have received ฿${amount.toLocaleString()} from ${sender.fullName}. Transaction ID: ${transactionId}.`,
+  }], { session });
+
+    await Notification.create([{
+    user: sender._id,
+    message: `Your transfer of ฿${amount.toLocaleString()} to ${receiver.fullName} was successful. Transaction ID: ${transactionId}.`,
+  }], { session });
 
     await session.commitTransaction();
     session.endSession();
 
-    res.json({
-      message: "Transfer successful",
+    return res.json({
+      success: true,
       transactionId,
-      receiver: {
-        fullName: receiver.fullName,
-        accountNumber: receiver.accountNumber,
-      },
     });
 
   } catch (err) {
+    console.log("❌ TRANSFER ERROR:", err.message);
+
     await session.abortTransaction();
     session.endSession();
-    res.status(400).json({ message: err.message });
+
+    return res.status(400).json({
+      message: err.message,
+    });
   }
 };

@@ -15,11 +15,13 @@ export default function TransferPage() {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // ✅ mask account
   const maskAccount = (acc) => {
     if (!acc) return "";
     return acc.slice(0, 4) + "xxxxx" + acc.slice(-3);
   };
 
+  // ✅ get logged-in user
   useEffect(() => {
     const fetchData = async () => {
       await getMe();
@@ -28,10 +30,12 @@ export default function TransferPage() {
     fetchData();
   }, []);
 
+  // ✅ redirect if not logged in
   useEffect(() => {
     if (!loading && !user) navigate("/login");
   }, [user, loading]);
 
+  // ✅ account input
   const handleAccountChange = (e) => {
     let value = e.target.value.toUpperCase();
 
@@ -50,6 +54,7 @@ export default function TransferPage() {
     }
   };
 
+  // ✅ fetch receiver
   const fetchReceiver = async (acc) => {
     if (!user) return;
 
@@ -60,6 +65,8 @@ export default function TransferPage() {
 
     try {
       setChecking(true);
+
+      console.log("🔍 Checking account:", acc);
 
       const res = await axios.get(
         "http://localhost:5001/api/user/account/" + acc,
@@ -73,22 +80,25 @@ export default function TransferPage() {
         return;
       }
 
+      console.log("✅ Receiver found:", data);
       setReceiver(data);
-    } catch (err) {
-    console.log("ERROR:", err.response);
 
-    if (err.response?.status === 404) {
-      setReceiverError("Account does not exist");
-    } else if (err.response?.status === 400) {
-      setReceiverError("Invalid account format");
-    } else {
-      setReceiverError("Error checking account");
-    }
+    } catch (err) {
+      console.log("❌ ERROR:", err.response);
+
+      if (err.response?.status === 404) {
+        setReceiverError("Account does not exist");
+      } else if (err.response?.status === 400) {
+        setReceiverError("Invalid account format");
+      } else {
+        setReceiverError("Error checking account");
+      }
     } finally {
       setChecking(false);
     }
   };
 
+  // ✅ auto check receiver
   useEffect(() => {
     if (receiverAcc.length === 12) {
       const delay = setTimeout(() => {
@@ -101,35 +111,54 @@ export default function TransferPage() {
     }
   }, [receiverAcc]);
 
+  // ✅ amount input
   const handleAmountChange = (e) => {
     const value = e.target.value;
     if (value < 0) return;
     setAmount(value);
   };
 
+  // ✅ FIXED HANDLE NEXT
   const handleNext = () => {
     const amt = Number(amount);
 
-    if (!receiver) return alert("Receiver not valid");
-    if (!amt || amt <= 0) return alert("Enter valid amount");
-    if (amt > user.balance) return alert("Insufficient balance");
+    // 🔥 validations
+    if (!receiver || !receiver.accountNumber) {
+      return alert("Receiver not valid");
+    }
 
+    if (!amt || amt <= 0) {
+      return alert("Enter valid amount");
+    }
+
+    if (amt > user.balance) {
+      return alert("Insufficient balance");
+    }
+
+    console.log("🚀 NAVIGATING WITH:", {
+      sender: user,
+      receiver,
+      amount: amt,
+    });
+
+    // ✅ FIX: sender must be user
     navigate("/confirm", {
       state: {
         sender: user,
-        receiver: { ...receiver },
+        receiver: receiver,
         amount: amt,
       },
     });
   };
 
+  // ✅ loading states
   if (loading) return <div className="p-4 text-center">Loading...</div>;
   if (!user) return <div className="p-4 text-center">User not found</div>;
 
   return (
     <div className="min-h-screen bg-base-200">
 
-      {/* 🔥 GRADIENT HEADER */}
+      {/* HEADER */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-5 rounded-b-3xl shadow-lg flex items-center gap-3">
         <button
           onClick={() => navigate("/")}
@@ -142,7 +171,7 @@ export default function TransferPage() {
 
       <div className="p-4 space-y-4">
 
-        {/* FROM CARD */}
+        {/* FROM */}
         <div className="bg-base-100 p-4 rounded-2xl shadow-md">
           <p className="text-sm opacity-60">From</p>
           <h2 className="font-semibold">{user.fullName}</h2>
@@ -154,7 +183,7 @@ export default function TransferPage() {
           </p>
         </div>
 
-        {/* TO CARD */}
+        {/* TO */}
         <div className="bg-base-100 p-4 rounded-2xl shadow-md">
           <p className="text-sm opacity-60 mb-1">To</p>
 
@@ -185,7 +214,7 @@ export default function TransferPage() {
           )}
         </div>
 
-        {/* AMOUNT CARD */}
+        {/* AMOUNT */}
         <div className="bg-base-100 p-4 rounded-2xl shadow-md">
           <p className="text-sm opacity-60 mb-1">Amount</p>
 
@@ -204,11 +233,11 @@ export default function TransferPage() {
           )}
         </div>
 
-        {/* BUTTONS */}
+        {/* BUTTON */}
         <button
           onClick={handleNext}
           disabled={!receiver || checking}
-          className="btn w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-black border-none rounded-xl disabled:opacity-80"
+          className="btn w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-none rounded-xl disabled:opacity-80"
         >
           Continue
         </button>

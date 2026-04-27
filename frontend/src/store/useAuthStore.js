@@ -46,6 +46,22 @@ export const useAuthStore = create((set) => ({
   }
 },
 
+// LOG OUT
+logout: async () => {
+  try {
+    await axios.post(
+      "http://localhost:5001/api/auth/logout",
+      {},
+      { withCredentials: true }
+    );
+
+    set({ user: null });
+  } catch (err) {
+    console.log(err);
+  }
+},
+
+
   getMe: async () => {
     try {
       const res = await axios.get(`${API}/me`, {
@@ -58,5 +74,13 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  refreshUser: async () => {
+  try {
+    const res = await axios.get("/api/auth/me", {
+      withCredentials: true,
+    });
+    set({ user: res.data });
+  } catch {}
+}
 
 }));

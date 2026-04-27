@@ -8,17 +8,17 @@ import {
 } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
-export default function HistoryPage() {
+export default function CardPage() {
   const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
   const { user, getMe } = useAuthStore();
 
-  // 🔥 Load user
+  // 🔥 Fetch user
   useEffect(() => {
     getMe();
   }, []);
 
-  // 🔥 Load ALL transactions
+  // 🔥 Fetch transactions with polling
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -33,14 +33,14 @@ export default function HistoryPage() {
     };
 
     fetchTransactions();
+    const interval = setInterval(fetchTransactions, 3000);
+    return () => clearInterval(interval);
   }, []);
 
-  // 🕒 Format time
-  const formatTime = (date) => {
-    return new Date(date).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  // 💳 format account
+  const formatAccount = (acc) => {
+    if (!acc) return "";
+    return acc.replace(/(.{4})/g, "$1 ").trim();
   };
 
   // 📅 GROUP BY DATE
@@ -75,7 +75,7 @@ export default function HistoryPage() {
   return (
     <div className="min-h-screen bg-base-200">
 
-      {/* 🔵 HEADER */}
+      {/* HEADER */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-5 rounded-b-3xl shadow-lg flex items-center gap-3">
         <button
           onClick={() => navigate("/")}
@@ -83,18 +83,41 @@ export default function HistoryPage() {
         >
           <ArrowLeft size={18} />
         </button>
-        <h1 className="text-lg font-semibold">Transaction History</h1>
+        <h1 className="text-lg font-semibold">My Card</h1>
       </div>
 
-      <div className="p-4 space-y-5">
+      <div className="p-4 space-y-4">
 
-        {/* 🧾 TRANSACTIONS */}
+        {/* 💳 CARD */}
+        <div className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-5 rounded-3xl shadow-lg relative overflow-hidden">
+
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+
+          <p className="text-sm opacity-80">Acc Number</p>
+
+          <div className="flex items-center justify-between">
+            <p className="text-lg tracking-wider">
+              {user?.accountNumber
+                ? formatAccount(user.accountNumber)
+                : "---- ---- ----"}
+            </p>
+          </div>
+
+          <div className="mt-4">
+            <p className="text-sm opacity-80">Balance</p>
+            <h1 className="text-3xl font-bold">
+              ฿{(user?.balance || 0).toLocaleString()}
+            </h1>
+          </div>
+        </div>
+
+        {/* 🧾 GROUPED TRANSACTIONS */}
         {Object.entries(grouped).map(([label, list]) => {
           if (list.length === 0) return null;
 
           return (
             <div key={label}>
-              <h2 className="text-sm font-semibold opacity-60 mb-3">
+              <h2 className="text-sm font-semibold opacity-60 mb-2">
                 {label}
               </h2>
 
@@ -106,9 +129,8 @@ export default function HistoryPage() {
                   return (
                     <div
                       key={tx._id}
-                      className="bg-base-100 p-4 rounded-2xl shadow flex items-center gap-3"
+                      className="bg-base-100 p-4 rounded-2xl shadow-md flex items-center gap-3"
                     >
-                      {/* ICON */}
                       <div
                         className={`p-2 rounded-full ${
                           isReceive
@@ -123,21 +145,16 @@ export default function HistoryPage() {
                         )}
                       </div>
 
-                      {/* INFO */}
                       <div className="flex-1">
-                        <p className="text-sm font-medium">
+                        <p className="text-sm">
                           {isReceive
                             ? "Money received"
                             : "Transfer payment"}
                         </p>
-                        <p className="text-xs opacity-60">
-                          {formatTime(tx.createdAt)}
-                        </p>
                       </div>
 
-                      {/* AMOUNT */}
                       <div
-                        className={`text-sm font-semibold ${
+                        className={`text-sm font-medium ${
                           isReceive
                             ? "text-green-600"
                             : "text-red-500"
@@ -153,7 +170,6 @@ export default function HistoryPage() {
             </div>
           );
         })}
-
       </div>
     </div>
   );
