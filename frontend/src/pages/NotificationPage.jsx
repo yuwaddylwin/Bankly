@@ -33,7 +33,7 @@ export default function NotificationPage() {
 
   useEffect(() => {
     fetchNotis();
-    markAsRead(); // ✅ THIS FIXES YOUR ISSUE
+    markAsRead(); 
 
     const interval = setInterval(fetchNotis, 3000);
     return () => clearInterval(interval);

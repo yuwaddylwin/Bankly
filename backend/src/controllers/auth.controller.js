@@ -8,7 +8,7 @@ export const signup = async (req, res) => {
   const { fullName, email, password, phone } = req.body;
 
   try {
-    // ✅ Validate input
+    // Validate input
     if (!fullName || !email || !password || !phone) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -25,7 +25,7 @@ export const signup = async (req, res) => {
       });
 }
 
-    // ✅ Check existing user (email or phone)
+    // Check existing user (email or phone)
     const userExists = await User.findOne({
       $or: [{ email }, { phone }],
     });
@@ -36,7 +36,7 @@ export const signup = async (req, res) => {
       });
     }
 
-    // ✅ Create user (NO manual hashing!)
+    // Create user (NO manual hashing!)
     const newUser = await User.create({
       fullName,
       email,
@@ -44,12 +44,12 @@ export const signup = async (req, res) => {
       phone,
     });
 
-    // ✅ Generate token (optional)
+    // Generate token (optional)
     if (generateToken) {
       generateToken(newUser._id, res);
     }
 
-    // ✅ Send response (safe data only)
+    // Send response (safe data only)
     res.status(201).json({
       _id: newUser._id,
       fullName: newUser.fullName,
@@ -107,12 +107,10 @@ export const login = async (req, res) => {
     res.json({ user });
 
   } catch (err) {
-    console.error("LOGIN ERROR:", err); // 🔥 THIS IS KEY
+    console.error("LOGIN ERROR:", err); 
     res.status(500).json({ message: "Server error" });
   }
 };
-
-
 
 
 

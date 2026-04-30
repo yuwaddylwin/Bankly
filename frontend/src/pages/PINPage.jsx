@@ -16,7 +16,7 @@ export default function PINPage() {
     setPin((prev) => prev.slice(0, -1));
   };
 
-  // 🔥 AUTO CHECK PIN
+  //AUTO CHECK PIN
   useEffect(() => {
     if (pin.length !== 6) return;
 
@@ -35,7 +35,7 @@ export default function PINPage() {
 
       <div className="w-full max-w-sm">
 
-        {/* 🔥 GRADIENT TOP CARD */}
+        {/* GRADIENT TOP CARD */}
         <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl p-5 shadow-lg mb-[-40px] relative z-10">
           <div className="flex items-center gap-2">
             <button
@@ -51,11 +51,6 @@ export default function PINPage() {
 
         {/* MAIN CARD */}
         <div className="bg-base-100 rounded-2xl pt-14 pb-6 px-5 shadow-xl flex flex-col items-center">
-
-          {/* LOGO */}
-          {/* <div className="w-16 h-16 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold">
-            Bankly
-          </div> */}
 
           <h2 className="mt-4 text-lg font-semibold">Enter PIN</h2>
           <p className="text-sm text-gray-500">

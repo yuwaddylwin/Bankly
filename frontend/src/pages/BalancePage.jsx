@@ -9,12 +9,12 @@ export default function BalancePage() {
   const navigate = useNavigate();
   const { user, getMe } = useAuthStore();
 
-  // 🔥 Load user
+  // Load user
   useEffect(() => {
     getMe();
   }, []);
 
-  // 🔥 Load ALL transactions (important for monthly calc)
+  // Load ALL transactions (important for monthly calc)
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -22,7 +22,7 @@ export default function BalancePage() {
           "http://localhost:5001/api/transactions",
           { withCredentials: true }
         );
-        setTransactions(res.data); // ✅ no slicing
+        setTransactions(res.data); 
       } catch {
         console.log("Failed to load transactions");
       }
@@ -31,13 +31,13 @@ export default function BalancePage() {
     fetchTransactions();
   }, []);
 
-  // 💳 format account
+  // format account
   const formatAccount = (acc) => {
     if (!acc) return "";
     return acc.replace(/(.{4})/g, "$1 ").trim();
   };
 
-  // 📅 MONTHLY CALCULATION
+  // MONTHLY CALCULATION
   const now = new Date();
 
   const monthlyTransactions = transactions.filter((tx) => {
@@ -63,7 +63,7 @@ export default function BalancePage() {
   return (
     <div className="min-h-screen bg-base-200">
 
-      {/* 🔵 HEADER */}
+      {/* HEADER */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-5 rounded-b-3xl shadow-lg flex items-center gap-3">
         <button
           onClick={() => navigate("/")}
@@ -76,7 +76,7 @@ export default function BalancePage() {
 
       <div className="p-5 space-y-5">
 
-        {/* 💰 BALANCE CARD */}
+        {/* BALANCE CARD */}
         <div className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-6 rounded-3xl shadow-lg text-center relative overflow-hidden">
 
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -93,7 +93,7 @@ export default function BalancePage() {
           </p>
         </div>
 
-        {/* 📊 MONTHLY INCOME / EXPENSE */}
+        {/* MONTHLY INCOME / EXPENSE */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-base-100 p-4 rounded-2xl shadow text-center">
             <p className="text-xs opacity-60">This Month Income</p>
@@ -110,7 +110,7 @@ export default function BalancePage() {
           </div>
         </div>
 
-        {/* 🕒 RECENT TRANSACTIONS */}
+        {/* RECENT TRANSACTIONS */}
         <div>
           <h2 className="text-sm font-semibold opacity-60 mb-3">
             Recent Activity

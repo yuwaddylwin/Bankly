@@ -1,5 +1,3 @@
-// import Navbar from "./components/Navbar";
-
 import {Routes, Route} from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage";
 import HomePage from "./pages/HomePage";
@@ -18,8 +16,10 @@ import SuccessPage from "./pages/SuccessPage";
 import CardPage from "./pages/CardPage";
 import SettingsPage from "./pages/SettingPage";
 import ProfilePage from "./pages/ProfilePage";
-import { LogOut } from "lucide-react";
 import LogoutPage from "./pages/LogoutPage";
+import ScanPage from "./pages/ScanPage";
+// import { LogOut } from "lucide-react";
+
 
 export default function App() {
   const getMe = useAuthStore((state) => state.getMe);
@@ -49,11 +49,8 @@ export default function App() {
         <Route path="/balance" element={<BalancePage />} />
         <Route path="/setting" element={<SettingsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/scan" element={<ScanPage />} />
         
-
-
-
-
         {/* <Route path="/logout" element={<LogoutPage/>} /> */}
       </Routes>
     </div>

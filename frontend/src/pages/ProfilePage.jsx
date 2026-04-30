@@ -9,7 +9,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-base-200">
 
-      {/* 🔵 HEADER */}
+      {/* HEADER */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-5 rounded-b-3xl shadow-lg flex items-center gap-3">
         <button
           onClick={() => navigate(-1)}
@@ -22,7 +22,7 @@ export default function ProfilePage() {
 
       <div className="p-5">
 
-        {/* 👤 PROFILE CARD */}
+        {/* PROFILE CARD */}
         <div className="bg-gradient-to-br from-indigo-500 to-purple-400 text-white rounded-3xl p-6 shadow-lg text-center relative overflow-hidden">
 
           {/* glow */}
@@ -42,7 +42,7 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        {/* 📄 INFO CARD */}
+        {/* INFO CARD */}
         <div className="mt-5 bg-base-100 rounded-3xl shadow divide-y">
 
           <div className="p-4">

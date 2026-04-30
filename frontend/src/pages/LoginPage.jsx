@@ -38,7 +38,7 @@ export default function LoginPage() {
       localStorage.setItem("userId", userData._id);
       localStorage.setItem("user", JSON.stringify(userData));
 
-      toast.success("Welcome back 👋");
+      toast.success("Welcome back from Bankly 👋 ");
       navigate("/");
     }
   };
@@ -48,7 +48,7 @@ export default function LoginPage() {
 
       <div className="w-full max-w-md">
 
-        {/* 🔥 TOP GRADIENT CARD */}
+        {/* TOP GRADIENT CARD */}
         <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl p-5 shadow-lg mb-[-40px] relative z-10">
           <h1 className="text-xl font-bold">Welcome Back</h1>
           <p className="text-sm opacity-80">Login to continue</p>

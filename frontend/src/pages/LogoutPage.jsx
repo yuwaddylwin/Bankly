@@ -20,7 +20,7 @@ export default function LogoutPage() {
 
       <div className="bg-base-100 p-6 rounded-3xl shadow text-center">
 
-        {/* 🔵 Loading Spinner */}
+        {/*Loading Spinner */}
         <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
 
         <p className="text-sm opacity-70">Logging you out...</p>

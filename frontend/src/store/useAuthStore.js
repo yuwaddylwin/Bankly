@@ -25,7 +25,7 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  // ✅ LOGIN FUNCTION
+  // LOGIN FUNCTION
   login: async (data) => {
   try {
     set({ isLoggingIn: true });
@@ -34,7 +34,7 @@ export const useAuthStore = create((set) => ({
       withCredentials: true,
     });
 
-    // ✅ STORE USER HERE
+    // STORE USER HERE
     set({ user: res.data.user });
 
     set({ isLoggingIn: false });

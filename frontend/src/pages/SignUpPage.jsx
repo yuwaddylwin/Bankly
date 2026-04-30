@@ -47,7 +47,7 @@ export default function SignUpPage() {
     const res = await signup(formData);
 
     if (res) {
-      toast.success("Signup successful 🎉");
+      toast.success("Signup successful!");
       setFormData(initialState);
       setShowPassword(false);
     }
@@ -58,7 +58,7 @@ export default function SignUpPage() {
 
       <div className="w-full max-w-md">
 
-        {/* 🔥 SMALL TOP GRADIENT CARD */}
+        {/* SMALL TOP GRADIENT CARD */}
         <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl p-5 shadow-lg mb-[-40px] relative z-10">
           <h1 className="text-xl font-bold">Register Account</h1>
           <p className="text-sm opacity-80">Join your digital bank, Bankly!</p>

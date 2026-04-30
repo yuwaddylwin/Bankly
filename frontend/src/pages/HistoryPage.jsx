@@ -13,12 +13,12 @@ export default function HistoryPage() {
   const navigate = useNavigate();
   const { user, getMe } = useAuthStore();
 
-  // 🔥 Load user
+  // Load user
   useEffect(() => {
     getMe();
   }, []);
 
-  // 🔥 Load ALL transactions
+  // Load ALL transactions
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -35,7 +35,7 @@ export default function HistoryPage() {
     fetchTransactions();
   }, []);
 
-  // 🕒 Format time
+  // Format time
   const formatTime = (date) => {
     return new Date(date).toLocaleTimeString([], {
       hour: "2-digit",
@@ -43,7 +43,7 @@ export default function HistoryPage() {
     });
   };
 
-  // 📅 GROUP BY DATE
+  // GROUP BY DATE
   const groupTransactions = () => {
     const groups = {
       Today: [],
@@ -75,7 +75,7 @@ export default function HistoryPage() {
   return (
     <div className="min-h-screen bg-base-200">
 
-      {/* 🔵 HEADER */}
+      {/* HEADER */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-5 rounded-b-3xl shadow-lg flex items-center gap-3">
         <button
           onClick={() => navigate("/")}
@@ -88,7 +88,7 @@ export default function HistoryPage() {
 
       <div className="p-4 space-y-5">
 
-        {/* 🧾 TRANSACTIONS */}
+        {/* TRANSACTIONS */}
         {Object.entries(grouped).map(([label, list]) => {
           if (list.length === 0) return null;
 

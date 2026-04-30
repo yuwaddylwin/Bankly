@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuthStore } from "../store/useAuthStore";
 import { ArrowLeft } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 export default function TransferPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { user, getMe } = useAuthStore();
 
@@ -15,13 +17,13 @@ export default function TransferPage() {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // ✅ mask account
+  // mask account
   const maskAccount = (acc) => {
     if (!acc) return "";
     return acc.slice(0, 4) + "xxxxx" + acc.slice(-3);
   };
 
-  // ✅ get logged-in user
+  // get logged-in user
   useEffect(() => {
     const fetchData = async () => {
       await getMe();
@@ -30,12 +32,23 @@ export default function TransferPage() {
     fetchData();
   }, []);
 
-  // ✅ redirect if not logged in
+  useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const accFromQR = params.get("acc");
+
+  if (accFromQR) {
+    console.log("📥 QR Account:", accFromQR);
+    setReceiverAcc(accFromQR);
+    fetchReceiver(accFromQR);
+  }
+}, [location.search]);
+
+  // redirect if not logged in
   useEffect(() => {
     if (!loading && !user) navigate("/login");
   }, [user, loading]);
 
-  // ✅ account input
+  // account input
   const handleAccountChange = (e) => {
     let value = e.target.value.toUpperCase();
 
@@ -54,7 +67,7 @@ export default function TransferPage() {
     }
   };
 
-  // ✅ fetch receiver
+  // fetch receiver
   const fetchReceiver = async (acc) => {
     if (!user) return;
 
@@ -66,7 +79,7 @@ export default function TransferPage() {
     try {
       setChecking(true);
 
-      console.log("🔍 Checking account:", acc);
+      console.log("Checking account:", acc);
 
       const res = await axios.get(
         "http://localhost:5001/api/user/account/" + acc,
@@ -80,11 +93,11 @@ export default function TransferPage() {
         return;
       }
 
-      console.log("✅ Receiver found:", data);
+      console.log("Receiver found:", data);
       setReceiver(data);
 
     } catch (err) {
-      console.log("❌ ERROR:", err.response);
+      console.log("ERROR:", err.response);
 
       if (err.response?.status === 404) {
         setReceiverError("Account does not exist");
@@ -98,7 +111,7 @@ export default function TransferPage() {
     }
   };
 
-  // ✅ auto check receiver
+  // auto check receiver
   useEffect(() => {
     if (receiverAcc.length === 12) {
       const delay = setTimeout(() => {
@@ -111,18 +124,18 @@ export default function TransferPage() {
     }
   }, [receiverAcc]);
 
-  // ✅ amount input
+  // amount input
   const handleAmountChange = (e) => {
     const value = e.target.value;
     if (value < 0) return;
     setAmount(value);
   };
 
-  // ✅ FIXED HANDLE NEXT
+  // FIXED HANDLE NEXT
   const handleNext = () => {
     const amt = Number(amount);
 
-    // 🔥 validations
+    // validations
     if (!receiver || !receiver.accountNumber) {
       return alert("Receiver not valid");
     }
@@ -135,13 +148,13 @@ export default function TransferPage() {
       return alert("Insufficient balance");
     }
 
-    console.log("🚀 NAVIGATING WITH:", {
+    console.log("NAVIGATING WITH:", {
       sender: user,
       receiver,
       amount: amt,
     });
 
-    // ✅ FIX: sender must be user
+    // FIX: sender must be user
     navigate("/confirm", {
       state: {
         sender: user,
@@ -151,7 +164,7 @@ export default function TransferPage() {
     });
   };
 
-  // ✅ loading states
+  // loading states
   if (loading) return <div className="p-4 text-center">Loading...</div>;
   if (!user) return <div className="p-4 text-center">User not found</div>;
 

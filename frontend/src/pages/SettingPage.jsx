@@ -9,7 +9,7 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-base-200">
 
-      {/* 🔵 HEADER */}
+      {/* HEADER */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-5 rounded-b-3xl shadow-lg flex items-center gap-3">
         <button
           onClick={() => navigate("/")}
@@ -51,7 +51,7 @@ export default function SettingsPage() {
           Terms and Condition
         </div>
 
-        {/* 🔴 LOGOUT */}
+        {/* LOGOUT */}
         <div
           onClick={() => setShowConfirm(true)}
           className="bg-base-100 p-4 rounded-xl text-red-500 cursor-pointer"
@@ -60,7 +60,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* 🔥 CONFIRM MODAL */}
+      {/* CONFIRM MODAL */}
       {showConfirm && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 

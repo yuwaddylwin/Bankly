@@ -2,23 +2,23 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function TransactionsPage() {
-  console.log("🚀 TransactionsPage loaded");
+  // console.log(" TransactionsPage loaded");
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
   const fetchTransactions = async () => {
     try {
-      console.log("🔥 Calling /api/transactions...");
+      console.log(" Calling /api/transactions...");
 
       const res = await axios.get("/api/transactions", { withCredentials: true })
 
-      console.log("✅ RESPONSE:", res.data);
+      console.log(" RESPONSE:", res.data);
 
-      setTransactions(res.data); // ✅ THIS LINE FIXES EVERYTHING
+      setTransactions(res.data); 
 
     } catch (err) {
-      console.log("❌ ERROR STATUS:", err.response?.status);
-      console.log("❌ ERROR DATA:", err.response?.data);
+      console.log("ERROR STATUS:", err.response?.status);
+      console.log("ERROR DATA:", err.response?.data);
     }
   };
 

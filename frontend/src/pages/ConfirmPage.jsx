@@ -51,7 +51,7 @@ export default function ConfirmPage() {
       { withCredentials: true }
     );
 
-    // 🔥 refresh balance instantly
+    // refresh balance instantly
     await refreshUser();
 
     navigate("/success", {
@@ -71,7 +71,7 @@ export default function ConfirmPage() {
   return (
     <div className="min-h-screen bg-base-200">
 
-      {/* 🔥 GRADIENT HEADER */}
+      {/* GRADIENT HEADER */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-5 rounded-b-3xl shadow-lg flex items-center gap-3">
         <button
           onClick={() => navigate(-1)}
@@ -84,7 +84,7 @@ export default function ConfirmPage() {
 
       <div className="p-4 space-y-4">
 
-        {/* 🔥 AMOUNT CARD (highlight) */}
+        {/* AMOUNT CARD (highlight) */}
         <div className="bg-base-100 rounded-2xl shadow-md p-5 text-center">
           <p className="text-sm opacity-60">Amount</p>
           <h1 className="text-3xl font-bold text-indigo-600 mt-1">

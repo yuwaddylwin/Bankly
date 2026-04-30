@@ -14,7 +14,7 @@ export default function BottomNav() {
         { withCredentials: true }
       );
 
-      // ✅ ONLY COUNT UNREAD
+      // ONLY COUNT UNREAD
       const unread = res.data.filter(n => !n.isRead).length;
       setCount(unread);
 
@@ -43,11 +43,14 @@ export default function BottomNav() {
         Cards
       </div>
 
-      <div className="bg-indigo-500 p-4 rounded-full -mt-8 shadow-lg">
+     <div
+        onClick={() => navigate("/scan")}
+        className="bg-indigo-500 p-4 rounded-full -mt-8 shadow-lg cursor-pointer"
+      >
         <ScanLine className="text-white" />
       </div>
 
-      {/* 🔔 NOTIFICATION */}
+      {/* NOTIFICATION */}
       <div
         onClick={() => navigate("/notifications")}
         className="flex flex-col items-center text-sm text-gray-500 cursor-pointer relative"
@@ -55,7 +58,7 @@ export default function BottomNav() {
         <Bell size={20} />
         Noti
 
-        {/* ✅ BADGE */}
+        {/* BADGE */}
         {count > 0 && (
           <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full">
             {count}

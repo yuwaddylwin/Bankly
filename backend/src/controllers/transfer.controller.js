@@ -1,4 +1,3 @@
-// controllers/transferController.js
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import Transaction from "../models/transaction.model.js";
@@ -9,22 +8,22 @@ const generateTransactionId = () => {
 };
 
 export const transferMoney = async (req, res) => {
-  console.log("📥 BODY:", req.body);
-  console.log("👤 USER:", req.user);
+  console.log("BODY:", req.body);
+  console.log("USER:", req.user);
 
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    // 🔥 SAFE extraction
+    // SAFE extraction
     const senderId = req.user?._id;
     const { receiverAcc, amount } = req.body;
 
-    console.log("🔎 senderId:", senderId);
-    console.log("🔎 receiverAcc:", receiverAcc);
-    console.log("🔎 amount:", amount);
+    console.log("senderId:", senderId);
+    console.log("receiverAcc:", receiverAcc);
+    console.log("amount:", amount);
 
-    // ✅ validate input
+    // validate input
     if (!senderId) throw new Error("Unauthorized");
     if (!receiverAcc || !amount) {
       throw new Error("Invalid data");
@@ -33,10 +32,10 @@ export const transferMoney = async (req, res) => {
     const sender = await User.findById(senderId).session(session);
     const receiver = await User.findOne({ accountNumber: receiverAcc }).session(session);
 
-    console.log("👤 Sender:", sender);
-    console.log("👤 Receiver:", receiver);
+    console.log("Sender:", sender);
+    console.log("Receiver:", receiver);
 
-    // 🔥 CRITICAL FIXES
+    // CRITICAL FIXES
     if (!sender) throw new Error("Sender not found");
     if (!receiver) throw new Error("Receiver not found");
 
@@ -48,14 +47,14 @@ export const transferMoney = async (req, res) => {
       throw new Error("Insufficient balance");
     }
 
-    // 💰 Update balances
+    // Update balances
     sender.balance -= amount;
     receiver.balance += amount;
 
     await sender.save({ session });
     await receiver.save({ session });
 
-    // 🧾 Transaction
+    // Transaction
     const transactionId = "TXN" + Date.now() + Math.floor(Math.random() * 1000);
 
     await Transaction.create([{
@@ -65,7 +64,7 @@ export const transferMoney = async (req, res) => {
       amount,
     }], { session });
 
-    // 🔔 Notification
+    // Notification
     await Notification.create([{
     user: receiver._id,
     message: `You have received ฿${amount.toLocaleString()} from ${sender.fullName}. Transaction ID: ${transactionId}.`,
@@ -85,7 +84,7 @@ export const transferMoney = async (req, res) => {
     });
 
   } catch (err) {
-    console.log("❌ TRANSFER ERROR:", err.message);
+    console.log("TRANSFER ERROR:", err.message);
 
     await session.abortTransaction();
     session.endSession();

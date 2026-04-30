@@ -1,10 +1,7 @@
-// controllers/transactionController.js
-
 import Transaction from "../models/transaction.model.js";
 
 export const getTransactions = async (req, res) => {
   try {
-    console.log("🚀 Inside getTransactions controller");
 
     const userId = req.user._id;
 
@@ -14,13 +11,13 @@ export const getTransactions = async (req, res) => {
         { receiver: userId },
       ],
     })
-      .populate("sender", "accountNumber")     // 🔥 THIS LINE
-      .populate("receiver", "accountNumber")   // 🔥 THIS LINE
+      .populate("sender", "accountNumber")      
+      .populate("receiver", "accountNumber")   
       .sort({ createdAt: -1 });
 
     res.json(transactions);
   } catch (err) {
-    console.log("❌ ERROR:", err.message);
+    console.log("ERROR:", err.message);
     res.status(500).json({ message: "Failed to fetch transactions" });
   }
 };

@@ -5,7 +5,7 @@ import { protect } from "../middleware/auth.middleware.js";
 const router = express.Router();
 
 router.get("/", protect, (req, res, next) => {
-  console.log("📦 Transaction route hit");
+  // console.log(" Transaction route hit");
   next();
 }, getTransactions);
 

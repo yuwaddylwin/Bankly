@@ -13,12 +13,12 @@ export default function CardPage() {
   const navigate = useNavigate();
   const { user, getMe } = useAuthStore();
 
-  // 🔥 Fetch user
+  // Fetch user
   useEffect(() => {
     getMe();
   }, []);
 
-  // 🔥 Fetch transactions with polling
+  //Fetch transactions with polling
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -37,13 +37,13 @@ export default function CardPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // 💳 format account
+  // format account
   const formatAccount = (acc) => {
     if (!acc) return "";
     return acc.replace(/(.{4})/g, "$1 ").trim();
   };
 
-  // 📅 GROUP BY DATE
+  // GROUP BY DATE
   const groupTransactions = () => {
     const groups = {
       Today: [],
@@ -88,7 +88,7 @@ export default function CardPage() {
 
       <div className="p-4 space-y-4">
 
-        {/* 💳 CARD */}
+        {/* CARD */}
         <div className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-5 rounded-3xl shadow-lg relative overflow-hidden">
 
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -111,7 +111,7 @@ export default function CardPage() {
           </div>
         </div>
 
-        {/* 🧾 GROUPED TRANSACTIONS */}
+        {/* GROUPED TRANSACTIONS */}
         {Object.entries(grouped).map(([label, list]) => {
           if (list.length === 0) return null;
 
