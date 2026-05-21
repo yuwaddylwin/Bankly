@@ -39,7 +39,7 @@ export default function PINPage() {
         <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-2xl p-5 shadow-lg mb-[-40px] relative z-10">
           <div className="flex items-center gap-2">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/home")}
               className="p-1 rounded-full bg-white/20"
             >
               <ArrowLeft size={18} />

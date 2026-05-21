@@ -112,7 +112,7 @@ export default function ScanPage() {
       {/* HEADER */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-5 rounded-b-3xl shadow-lg flex items-center gap-3">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           className="p-2 rounded-full bg-white/20"
         >
           <ArrowLeft size={18} />

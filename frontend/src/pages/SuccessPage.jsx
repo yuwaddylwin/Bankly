@@ -79,7 +79,7 @@ export default function SuccessPage() {
         </div>
 
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           className="btn mt-5 w-full bg-indigo-500 text-white rounded-xl"
         >
           Done

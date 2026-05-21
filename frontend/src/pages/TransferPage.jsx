@@ -174,7 +174,7 @@ export default function TransferPage() {
       {/* HEADER */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-5 rounded-b-3xl shadow-lg flex items-center gap-3">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           className="p-2 rounded-full bg-white/20"
         >
           <ArrowLeft size={18} />
@@ -256,7 +256,7 @@ export default function TransferPage() {
         </button>
 
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           className="text-center w-full text-sm opacity-60"
         >
           Cancel

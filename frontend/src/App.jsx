@@ -33,6 +33,7 @@ export default function App() {
       {/* <Navbar/> */}
       <Routes>
         <Route path="/" element={<SignUpPage/>} />
+        <Route path="/home" element={<HomePage/>}/>
         <Route path="/signup" element={<SignUpPage/>} />
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/logout" element={<LogoutPage/>} />
