@@ -1,18 +1,18 @@
-# 💳 Bankly
+# Bankly
 
 Bankly is a full-stack digital banking web application built to simulate modern mobile banking features with secure authentication, money transfers, QR payments, and transaction tracking.
 
 ## Project Demo
 [Demo Video](https://www.linkedin.com/posts/yuwaddylwin_mern-reactjs-nodejs-ugcPost-7463252017403035648-z-M8?utm_source=share&utm_medium=member_ios&rcm=ACoAAF0W0zcBYgZLv3GKti5jmF3By9n0mvFIlsE)
 
-## 📸 App Screenshots
+## App Screenshots
 ![image](1.png)
 ![image](2.png)
 ![image](3.png)
 
 ---
 
-## 📌 Overview
+## Overview
 
 Bankly enables users to:
 - Create and manage secure bank accounts
@@ -45,7 +45,7 @@ This project focuses on secure banking workflows, responsive mobile-first UI/UX,
 
 ---
 
-## ✨ Features
+## Features
 
 - Secure authentication and authorization
 - Money transfer with transaction confirmation
