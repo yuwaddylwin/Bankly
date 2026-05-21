@@ -22,7 +22,7 @@ Bankly enables users to:
 
 This project focuses on secure banking workflows, responsive mobile-first UI/UX, and real-world full-stack application development.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - React
@@ -44,21 +44,11 @@ This project focuses on secure banking workflows, responsive mobile-first UI/UX,
 
 ## ✨ Features
 
-- 🔐 Secure authentication and authorization
-- 💸 Money transfer with transaction confirmation
-- 🔢 Secure 6-digit PIN verification
-- 📱 Mobile-first responsive banking UI
-- 🔔 Transaction notifications and history
-- 💳 Card and balance management
-- 📷 QR code payment and receive system
-- ⚡ Optimized backend APIs and database operations
-
----
-
-## 🚀 Highlights
-
-- Built secure banking features with authentication and protected transactions
+- Secure authentication and authorization
+- Money transfer with transaction confirmation
+- Secure 6-digit PIN verification
+- Mobile-first responsive banking UI
+- Transaction notifications and history
+- Card and balance management
+- QR code payment and receive system
 - Optimized backend APIs and database operations
-- Designed modern banking UI inspired by real-world mobile banking applications
-
----
